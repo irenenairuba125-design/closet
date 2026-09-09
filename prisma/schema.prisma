@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// Mirrors the Supabase `auth.users` row for the fields our app needs.
+// Supabase Auth owns the real auth.users table (sign up, sessions, email);
+// this table is populated via a DB trigger (see prisma/supabase.sql) so
+// Prisma can join app data (orders) to a user without touching auth schema.
+model Profile {
+  id        String   @id @db.Uuid
+  email     String   @unique
+  firstName String?
+  lastName  String?
+  createdAt DateTime @default(now())
+  orders    Order[]
+}
+
+model Product {
+  id          String      @id @default(cuid())
+  name        String
+  description String
+  price       Int
+  image       String
+  section     String // Men | Women | Unisex | Sports
+  sizes       String[]    @default(["M", "L", "XL", "2XL", "3XL", "4XL"])
+  createdAt   DateTime    @default(now())
+  orderItems  OrderItem[]
+
+  @@index([section])
+}
+
+model Order {
+  id        String      @id @default(cuid())
+  userId    String      @db.Uuid
+  user      Profile     @relation(fields: [userId], references: [id])
+  status    String      @default("pending") // pending | paid | shipped | cancelled
+  total     Int
+  createdAt DateTime    @default(now())
+  items     OrderItem[]
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  name      String
+  price     Int
+  size      String
+  qty       Int
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}

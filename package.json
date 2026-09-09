@@ -6,9 +6,18 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:studio": "prisma studio"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@prisma/client": "^6",
+    "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.112.4",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
@@ -23,7 +32,9 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.4",
+    "prisma": "^6",
     "tailwindcss": "^4",
+    "tsx": "^4",
     "typescript": "^5"
   }
 }
