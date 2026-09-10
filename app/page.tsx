@@ -130,7 +130,10 @@ export default function Page() {
     setAuthError("");
     const { error } = await supabase.auth.signInWithPassword({ email, password: pwd });
     if (error) { setAuthError(error.message); return; }
-    setView("home"); resetAuthFields();
+    resetAuthFields();
+    const { isAdmin } = await fetch("/api/auth/role").then(r => r.json());
+    if (isAdmin) { window.location.href = "/admin"; return; }
+    setView("home");
   };
 
   const googleLogin = async () => {

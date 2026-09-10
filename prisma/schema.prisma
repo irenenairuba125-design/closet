@@ -19,6 +19,17 @@ model Profile {
   lastName  String?
   createdAt DateTime @default(now())
   orders    Order[]
+  admin     Admin?
+}
+
+// Role-membership table: a row here means this Profile (and its
+// underlying auth.users account) is an admin. Kept separate from Profile
+// rather than a boolean flag so admin membership has its own audit trail
+// (createdAt) and its own RLS policy — regular users can never read it.
+model Admin {
+  id        String   @id @db.Uuid
+  profile   Profile  @relation(fields: [id], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
 }
 
 model Product {
@@ -29,6 +40,7 @@ model Product {
   image       String
   section     String // Men | Women | Unisex | Sports
   sizes       String[]    @default(["M", "L", "XL", "2XL", "3XL", "4XL"])
+  colors      String[]    @default([])
   createdAt   DateTime    @default(now())
   orderItems  OrderItem[]
 

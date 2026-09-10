@@ -1,0 +1,15 @@
+export const PRODUCT_COLORS: { name: string; hex: string }[] = [
+  { name: "BLACK", hex: "#000000" },
+  { name: "WHITE", hex: "#FFFFFF" },
+  { name: "RED", hex: "#E53935" },
+  { name: "BLUE", hex: "#1E88E5" },
+  { name: "GREEN", hex: "#43A047" },
+  { name: "YELLOW", hex: "#FDD835" },
+  { name: "GREY", hex: "#9E9E9E" },
+  { name: "PINK", hex: "#EC407A" },
+  { name: "PURPLE", hex: "#8E24AA" },
+  { name: "ORANGE", hex: "#FB8C00" },
+  { name: "NAVY", hex: "#1A237E" },
+  { name: "BEIGE", hex: "#D8C3A5" },
+  { name: "BROWN", hex: "#6D4C41" },
+];
