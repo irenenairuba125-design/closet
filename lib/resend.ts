@@ -1,6 +1,13 @@
 import { Resend } from "resend";
 
-export const resend = new Resend(process.env.RESEND_API_KEY);
+// Constructed lazily (not at module scope) so builds don't crash when
+// RESEND_API_KEY isn't set yet — the key is only needed once an email
+// actually needs to be sent, at request time.
+let resend: Resend | null = null;
+function getResend() {
+  if (!resend) resend = new Resend(process.env.RESEND_API_KEY);
+  return resend;
+}
 
 // Resend's shared sandbox domain works without verifying your own domain,
 // but can only send to the email the Resend account was signed up with.
@@ -20,7 +27,7 @@ export async function sendOrderReceipt(order: {
     )
     .join("");
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to,
     subject: `Receipt for order #${order.id.slice(-8).toUpperCase()}`,
