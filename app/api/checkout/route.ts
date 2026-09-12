@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
+import { sendOrderReceipt } from "@/lib/resend";
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -54,6 +55,11 @@ export async function POST(request: Request) {
     },
     include: { items: true },
   });
+
+  // A failed receipt email shouldn't fail the checkout itself.
+  sendOrderReceipt(order, user.email!).catch((err) =>
+    console.error("Failed to send order receipt:", err)
+  );
 
   return NextResponse.json(order, { status: 201 });
 }
